@@ -1,6 +1,29 @@
 import { REQUEST_TIMEOUT_SECS } from "./config";
 
 // Helper functions
+
+// Combines getJSON and sendJSON
+export const AJAX = async (url, body = undefined) => {
+  try {
+    const fetchOptions = body
+      ? {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      : {};
+
+    // Timeout request after 5 seconds.
+    const res = await Promise.race([fetch(url, fetchOptions), timeout(REQUEST_TIMEOUT_SECS)]);
+    const data = await res.json();
+    if (!res.ok) throw new Error(`${data.message} - ${res.status}`);
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getJSON = async (url) => {
   try {
     // Timeout request after 5 seconds.
