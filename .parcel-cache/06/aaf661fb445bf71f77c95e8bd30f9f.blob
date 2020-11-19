@@ -501,18 +501,8 @@ const recipeController = async () => {
 
     _RecipeView.default.renderError();
   }
-};
+}; // Trys to render recipe on load or url hash changes
 
-const controlSearchResults = async () => {
-  try {
-    await model.loadSearchResults("pizza");
-    console.log(model.state);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-controlSearchResults(); // Trys to render recipe on load or url hash changes
 
 const init = () => {
   _RecipeView.default.attachRenderHandler(recipeController);
@@ -5799,8 +5789,7 @@ const state = {
     query: "",
     results: []
   }
-}; // Loads recipe information and stores to state
-
+};
 exports.state = state;
 
 const loadRecipt = async recipeId => {
@@ -5818,30 +5807,25 @@ const loadRecipt = async recipeId => {
   } catch (error) {
     throw error;
   }
-}; // Loads search recipe results and stores to state
-
+};
 
 exports.loadRecipt = loadRecipt;
 
 const loadSearchResults = async query => {
-  try {
-    state.search.query = query; // Loads recipe data from api
+  state.search.query = query; // Loads recipe data from api
 
-    const data = await (0, _helpers.getJSON)(`${_config.API_URL}?search=${query}`);
-    const {
-      recipes
-    } = data.data; // Stores results to state
+  const data = await (0, _helpers.getJSON)(`${_config.API_URL}?search=${query}`);
+  const {
+    recipes
+  } = data.data; // Store results to state
 
-    state.search.results = recipes.map(recipe => ({ ...cleanObject(recipe, "image_url"),
-      image: recipe.image_url
-    }));
-  } catch (error) {
-    throw error;
-  }
-}; // Cleans object, get rid of unwanted props
-
+  state.search.results = recipes.map(recipe => ({ ...cleanObject(recipe, "image_url"),
+    image: recipe.image_url
+  }));
+};
 
 exports.loadSearchResults = loadSearchResults;
+loadSearchResults("pizza"); // Cleans object, get rid of unwanted props
 
 const cleanObject = (object, ...propsToClean) => Object.entries(object).reduce((acc, [key, value]) => {
   !propsToClean.includes(key) && (acc[key] = value);

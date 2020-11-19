@@ -504,15 +504,11 @@ const recipeController = async () => {
 };
 
 const controlSearchResults = async () => {
-  try {
-    await model.loadSearchResults("pizza");
-    console.log(model.state);
-  } catch (error) {
+  try {} catch (error) {
     console.error(error);
   }
-};
+}; // Trys to render recipe on load or url hash changes
 
-controlSearchResults(); // Trys to render recipe on load or url hash changes
 
 const init = () => {
   _RecipeView.default.attachRenderHandler(recipeController);
@@ -5799,8 +5795,7 @@ const state = {
     query: "",
     results: []
   }
-}; // Loads recipe information and stores to state
-
+};
 exports.state = state;
 
 const loadRecipt = async recipeId => {
@@ -5818,8 +5813,7 @@ const loadRecipt = async recipeId => {
   } catch (error) {
     throw error;
   }
-}; // Loads search recipe results and stores to state
-
+};
 
 exports.loadRecipt = loadRecipt;
 
@@ -5838,10 +5832,10 @@ const loadSearchResults = async query => {
   } catch (error) {
     throw error;
   }
-}; // Cleans object, get rid of unwanted props
-
+};
 
 exports.loadSearchResults = loadSearchResults;
+loadSearchResults("pizza"); // Cleans object, get rid of unwanted props
 
 const cleanObject = (object, ...propsToClean) => Object.entries(object).reduce((acc, [key, value]) => {
   !propsToClean.includes(key) && (acc[key] = value);

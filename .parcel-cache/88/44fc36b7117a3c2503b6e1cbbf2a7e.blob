@@ -501,18 +501,8 @@ const recipeController = async () => {
 
     _RecipeView.default.renderError();
   }
-};
+}; // Trys to render recipe on load or url hash changes
 
-const controlSearchResults = async () => {
-  try {
-    await model.loadSearchResults("pizza");
-    console.log(model.state);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-controlSearchResults(); // Trys to render recipe on load or url hash changes
 
 const init = () => {
   _RecipeView.default.attachRenderHandler(recipeController);
@@ -5799,14 +5789,13 @@ const state = {
     query: "",
     results: []
   }
-}; // Loads recipe information and stores to state
-
+};
 exports.state = state;
 
 const loadRecipt = async recipeId => {
   try {
     // Loads recipe data from api
-    const data = await (0, _helpers.getJSON)(`${_config.API_URL}/${recipeId}`);
+    const data = await (0, _helpers.getJSON)(`${_config.API_URL}${recipeId}`);
     let {
       recipe
     } = data.data;
@@ -5818,26 +5807,12 @@ const loadRecipt = async recipeId => {
   } catch (error) {
     throw error;
   }
-}; // Loads search recipe results and stores to state
-
+};
 
 exports.loadRecipt = loadRecipt;
 
-const loadSearchResults = async query => {
-  try {
-    state.search.query = query; // Loads recipe data from api
-
-    const data = await (0, _helpers.getJSON)(`${_config.API_URL}?search=${query}`);
-    const {
-      recipes
-    } = data.data; // Stores results to state
-
-    state.search.results = recipes.map(recipe => ({ ...cleanObject(recipe, "image_url"),
-      image: recipe.image_url
-    }));
-  } catch (error) {
-    throw error;
-  }
+const loadSearchResults = query => {
+  state.search.query = query;
 }; // Cleans object, get rid of unwanted props
 
 
@@ -5855,7 +5830,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.REQUEST_TIMEOUT_SECS = exports.API_URL = void 0;
 // Central place for shared constants / vars
-const API_URL = "https://forkify-api.herokuapp.com/api/v2/recipes";
+const API_URL = "https://forkify-api.herokuapp.com/api/v2/recipes/";
 exports.API_URL = API_URL;
 const REQUEST_TIMEOUT_SECS = 10;
 exports.REQUEST_TIMEOUT_SECS = REQUEST_TIMEOUT_SECS;

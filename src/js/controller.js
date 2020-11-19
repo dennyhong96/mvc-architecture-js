@@ -29,6 +29,16 @@ const recipeController = async () => {
   }
 };
 
+const controlSearchResults = async () => {
+  try {
+    await model.loadSearchResults("pizza");
+    console.log(model.state);
+  } catch (error) {
+    console.error(error);
+  }
+};
+controlSearchResults();
+
 // Trys to render recipe on load or url hash changes
 const init = () => {
   recipeView.attachRenderHandler(recipeController);

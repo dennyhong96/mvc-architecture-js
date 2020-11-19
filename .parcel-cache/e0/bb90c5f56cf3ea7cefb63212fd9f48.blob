@@ -1,0 +1,58 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.loadSearchResults = exports.loadRecipt = exports.state = void 0;
+
+var _config = require("./config");
+
+var _helpers = require("./helpers");
+
+const state = {
+  recipe: {},
+  search: {
+    query: "",
+    results: []
+  }
+};
+exports.state = state;
+
+const loadRecipt = async recipeId => {
+  try {
+    // Loads recipe data from api
+    const data = await (0, _helpers.getJSON)(`${_config.API_URL}/${recipeId}`);
+    let {
+      recipe
+    } = data.data;
+    state.recipe = { ...cleanObject(recipe, "image_url", "source_url", "cooking_time"),
+      image: recipe.image_url,
+      sourceUrl: recipe.source_url,
+      cookingTime: recipe.cooking_time
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.loadRecipt = loadRecipt;
+
+const loadSearchResults = async query => {
+  state.search.query = query; // Loads recipe data from api
+
+  const data = await (0, _helpers.getJSON)(`${_config.API_URL}?search=${query}`);
+  const {
+    results
+  } = data.data;
+  state.search.results = results;
+  console.log(state);
+  console.log(data);
+};
+
+exports.loadSearchResults = loadSearchResults;
+loadSearchResults("pizza"); // Cleans object, get rid of unwanted props
+
+const cleanObject = (object, ...propsToClean) => Object.entries(object).reduce((acc, [key, value]) => {
+  !propsToClean.includes(key) && (acc[key] = value);
+  return acc;
+}, {});
