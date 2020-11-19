@@ -7,6 +7,7 @@ export const state = {
     query: "",
     results: [],
     pageNum: 1,
+    resultsPerPage: RESULTS_PER_PAGE,
   },
 };
 
@@ -48,11 +49,16 @@ export const loadSearchResults = async (query) => {
 };
 
 // Returns one page of results by page number
-export const getSearchResultsByPage = (pageNum = state.search.pageNum) => {
+export const getSearchResultsByPage = (pageNum = 1) => {
   state.search.pageNum = pageNum;
-  const start = (state.search.pageNum - 1) * RESULTS_PER_PAGE;
-  const end = state.search.pageNum * RESULTS_PER_PAGE;
+  const start = (state.search.pageNum - 1) * state.search.resultsPerPage;
+  const end = state.search.pageNum * state.search.resultsPerPage;
   return state.search.results.slice(start, end);
+};
+
+// Updates current page number state
+export const updatePageNumber = (toPage) => {
+  state.search.pageNum = toPage;
 };
 
 // Cleans object, get rid of unwanted props

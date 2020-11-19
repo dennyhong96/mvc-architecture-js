@@ -8,9 +8,10 @@ import * as model from "./model";
 import recipeView from "./views/RecipeView";
 import searchView from "./views/SearchView";
 import resultsView from "./views/ResultsView";
+import paginationView from "./views/PaginationView";
 
 // Activate Parcel hot module reloading
-module.hot && module.hot.accept();
+// module.hot && module.hot.accept();
 
 // API:
 // https://forkify-api.herokuapp.com/v2
@@ -57,15 +58,30 @@ const searchController = async (evt) => {
 
     // Clears search input
     searchView.clearInput();
+
+    // Render pagination
+    paginationView.render(model.state.search);
   } catch (error) {
     console.error(error);
     resultsView.renderError();
   }
 };
 
+const paginationController = (toPage) => {
+  // Update current page number in state
+  model.updatePageNumber(toPage);
+
+  // Re-render results by page number
+  resultsView.render(model.getSearchResultsByPage(model.state.search.pageNum));
+
+  // Re-render pagination
+  paginationView.render(model.state.search);
+};
+
 // Trys to render recipe on load or url hash changes
 const init = () => {
   recipeView.attachRenderHandler(recipeController);
   searchView.attachSearchHandler(searchController);
+  paginationView.attachPaginationHandler(paginationController);
 };
 init();
