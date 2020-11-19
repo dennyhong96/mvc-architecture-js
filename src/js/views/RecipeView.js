@@ -7,6 +7,15 @@ class RecipeView {
   #parentElement = document.querySelector(".recipe");
   #data;
 
+  // View in MVC shouldn't be aware of controller directly
+  // So don't import controller and use it
+  // Use a pubsub pattern:
+  // `attachRenderHandler` is the publisher of pubsub
+  attachRenderHandler(handler) {
+    // `handler` is the subscriber of pubsub
+    ["load", "hashchange"].forEach((event) => window.addEventListener(event, handler));
+  }
+
   // Renders recipe into recipe container
   render(data) {
     this.#data = data;

@@ -5905,9 +5905,9 @@ class RecipeView {
     });
   }
 
-  // View in MVC shouldn't be aware of controller directly
+  // View shouldn't be aware of controller directly
   // So don't import controller and use it
-  // Use a pubsub pattern:
+  // Use a pubsub pattern
   // `attachRenderHandler` is the publisher of pubsub
   attachRenderHandler(handler) {
     // `handler` is the subscriber of pubsub

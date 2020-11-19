@@ -7,7 +7,7 @@ import recipeView from "./views/RecipeView";
 // API:
 // https://forkify-api.herokuapp.com/v2
 
-const controlRecipes = async () => {
+const recipeController = async () => {
   // Get recipe id from url
   const recipeId = window.location.hash?.slice(1);
 
@@ -30,4 +30,7 @@ const controlRecipes = async () => {
 };
 
 // Trys to render recipe on load or url hash changes
-["load", "hashchange"].forEach((event) => window.addEventListener(event, controlRecipes));
+const init = () => {
+  recipeView.attachRenderHandler(recipeController);
+};
+init();
