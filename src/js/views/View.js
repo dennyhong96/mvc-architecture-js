@@ -3,7 +3,13 @@ import icons from "url:../../img/icons.svg";
 export default class View {
   _data;
 
-  // Compares DOM tree elements with a virtual DOM then updates textContent and attributes
+  /**
+   * Compares DOM tree elements with a virtual DOM then updates textContent and attributes
+   * @param {object | object[]} data - The updated data to be rendered (e.g recipe)
+   * @returns {undefined} Does not return
+   * @this {object} The View instance
+   * @author Denny Hong
+   */
   update(data) {
     this._data = data;
 
