@@ -1,5 +1,6 @@
 // import icons from "../../img/icons.svg"; // Parcel v1
 import icons from "url:../../img/icons.svg"; // Parcel v2
+import { Fraction } from "fractional";
 
 class RecipeView {
   // Private fields
@@ -96,21 +97,7 @@ class RecipeView {
     <div class="recipe__ingredients">
       <h2 class="heading--2">Recipe ingredients</h2>
       <ul class="recipe__ingredient-list">
-      ${this.#data.ingredients
-        .map(
-          ({ description, quantity, unit }) => `
-        <li class="recipe__ingredient">
-          <svg class="recipe__icon">
-            <use href="${icons}#icon-check"></use>
-          </svg>
-          ${quantity ? `<div class="recipe__quantity">${quantity}</div>` : ""}
-          <div class="recipe__description">
-            ${unit ? `<span class="recipe__unit">${unit}</span>` : ""}
-            ${description}
-          </div>
-        </li>`
-        )
-        .join("")}
+      ${this.#generateMarkupIngredients(this.#data.ingredients)}
       </ul>
     </div>
 
@@ -132,6 +119,25 @@ class RecipeView {
         </svg>
       </a>
     </div>`;
+  }
+
+  // Generate markup list for recipe ingredients
+  #generateMarkupIngredients(ingredients) {
+    return ingredients
+      .map(
+        ({ description, quantity, unit }) => `
+    <li class="recipe__ingredient">
+      <svg class="recipe__icon">
+        <use href="${icons}#icon-check"></use>
+      </svg>
+      ${quantity ? `<div class="recipe__quantity">${new Fraction(quantity).toString()}</div>` : ""}
+      <div class="recipe__description">
+        ${unit ? `<span class="recipe__unit">${unit}</span>` : ""}
+        ${description}
+      </div>
+    </li>`
+      )
+      .join("");
   }
 }
 

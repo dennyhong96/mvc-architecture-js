@@ -5949,7 +5949,21 @@ var _generateMarkup2 = function _generateMarkup2() {
     <div class="recipe__ingredients">
       <h2 class="heading--2">Recipe ingredients</h2>
       <ul class="recipe__ingredient-list">
-      ${_classPrivateMethodGet(this, _generateMarkupIngredients, _generateMarkupIngredients2).call(this, _classPrivateFieldGet(this, _data).ingredients)}
+      ${_classPrivateFieldGet(this, _data).ingredients.map(({
+    description,
+    quantity,
+    unit
+  }) => `
+        <li class="recipe__ingredient">
+          <svg class="recipe__icon">
+            <use href="${_icons.default}#icon-check"></use>
+          </svg>
+          ${quantity ? `<div class="recipe__quantity">${new _fractional.Fraction(quantity).toString()}</div>` : ""}
+          <div class="recipe__description">
+            ${unit ? `<span class="recipe__unit">${unit}</span>` : ""}
+            ${description}
+          </div>
+        </li>`).join("")}
       </ul>
     </div>
 

@@ -12,6 +12,7 @@ const timeout = function (s) {
   });
 };
 
+// API:
 // https://forkify-api.herokuapp.com/v2
 
 const controlRecipes = async () => {
@@ -27,7 +28,6 @@ const controlRecipes = async () => {
   try {
     // Loads recipe data from api
     await model.loadRecipt(recipeId);
-    const { recipe } = model.state;
 
     // Renders recipe
     recipeView.render(model.state.recipe);
