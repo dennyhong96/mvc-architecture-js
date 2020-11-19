@@ -43,5 +43,7 @@ export default class View {
       }
     });
   }
-......
+// ......
+}
+
 ```
