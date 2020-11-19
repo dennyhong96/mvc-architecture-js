@@ -526,7 +526,7 @@ const searchController = async evt => {
 
     await model.loadSearchResults(query); // Render recipe items by page number
 
-    _ResultsView.default.render(model.getSearchResultsByPage()); // Clears search input
+    _ResultsView.default.render(model.getSearchResultsByPage(2)); // Clears search input
 
 
     _SearchView.default.clearInput();
@@ -5870,7 +5870,7 @@ const loadSearchResults = async query => {
 
 exports.loadSearchResults = loadSearchResults;
 
-const getSearchResultsByPage = (pageNum = state.search.pageNum) => {
+const getSearchResultsByPage = pageNum => {
   state.search.pageNum = pageNum;
   const start = (state.search.pageNum - 1) * _config.RESULTS_PER_PAGE;
   const end = state.search.pageNum * _config.RESULTS_PER_PAGE;

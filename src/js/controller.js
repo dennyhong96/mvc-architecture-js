@@ -52,7 +52,8 @@ const searchController = async (evt) => {
     // Loads search results
     await model.loadSearchResults(query);
 
-    resultsView.render(model.state.search.results);
+    // Render recipe items by page number
+    resultsView.render(model.getSearchResultsByPage());
 
     // Clears search input
     searchView.clearInput();

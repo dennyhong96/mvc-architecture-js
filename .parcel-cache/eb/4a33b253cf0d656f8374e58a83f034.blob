@@ -524,9 +524,9 @@ const searchController = async evt => {
     _ResultsView.default.renderSpinner(); // Loads search results
 
 
-    await model.loadSearchResults(query); // Render recipe items by page number
+    await model.loadSearchResults(query);
 
-    _ResultsView.default.render(model.getSearchResultsByPage()); // Clears search input
+    _ResultsView.default.render(model.state.search.results); // Clears search input
 
 
     _SearchView.default.clearInput();
@@ -5813,7 +5813,7 @@ try {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getSearchResultsByPage = exports.loadSearchResults = exports.loadRecipt = exports.state = void 0;
+exports.getSearchResultsPage = exports.loadSearchResults = exports.loadRecipt = exports.state = void 0;
 
 var _config = require("./config");
 
@@ -5823,8 +5823,7 @@ const state = {
   recipe: {},
   search: {
     query: "",
-    results: [],
-    pageNum: 1
+    results: []
   }
 }; // Loads recipe information and stores to state
 
@@ -5865,20 +5864,16 @@ const loadSearchResults = async query => {
   } catch (error) {
     throw error;
   }
-}; // Returns one page of results by page number
-
+};
 
 exports.loadSearchResults = loadSearchResults;
 
-const getSearchResultsByPage = (pageNum = state.search.pageNum) => {
-  state.search.pageNum = pageNum;
-  const start = (state.search.pageNum - 1) * _config.RESULTS_PER_PAGE;
-  const end = state.search.pageNum * _config.RESULTS_PER_PAGE;
-  return state.search.results.slice(start, end);
+const getSearchResultsPage = pageNum => {
+  return state.search.results.slice((pageNum - 1) * 10, pageNum * 10);
 }; // Cleans object, get rid of unwanted props
 
 
-exports.getSearchResultsByPage = getSearchResultsByPage;
+exports.getSearchResultsPage = getSearchResultsPage;
 
 const cleanObject = (object, ...propsToClean) => Object.entries(object).reduce((acc, [key, value]) => {
   !propsToClean.includes(key) && (acc[key] = value);
@@ -5890,14 +5885,12 @@ const cleanObject = (object, ...propsToClean) => Object.entries(object).reduce((
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.RESULTS_PER_PAGE = exports.REQUEST_TIMEOUT_SECS = exports.API_URL = void 0;
+exports.REQUEST_TIMEOUT_SECS = exports.API_URL = void 0;
 // Central place for shared constants / vars
 const API_URL = "https://forkify-api.herokuapp.com/api/v2/recipes";
 exports.API_URL = API_URL;
 const REQUEST_TIMEOUT_SECS = 10;
 exports.REQUEST_TIMEOUT_SECS = REQUEST_TIMEOUT_SECS;
-const RESULTS_PER_PAGE = 10;
-exports.RESULTS_PER_PAGE = RESULTS_PER_PAGE;
 },{}],"0e8dcd8a4e1c61cf18f78e1c2563655d":[function(require,module,exports) {
 "use strict";
 

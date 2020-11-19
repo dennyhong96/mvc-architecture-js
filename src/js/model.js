@@ -1,4 +1,4 @@
-import { API_URL } from "./config";
+import { API_URL, RESULTS_PER_PAGE } from "./config";
 import { getJSON } from "./helpers";
 
 export const state = {
@@ -6,6 +6,7 @@ export const state = {
   search: {
     query: "",
     results: [],
+    pageNum: 1,
   },
 };
 
@@ -44,6 +45,14 @@ export const loadSearchResults = async (query) => {
   } catch (error) {
     throw error;
   }
+};
+
+// Returns one page of results by page number
+export const getSearchResultsByPage = (pageNum = state.search.pageNum) => {
+  state.search.pageNum = pageNum;
+  const start = (state.search.pageNum - 1) * RESULTS_PER_PAGE;
+  const end = state.search.pageNum * RESULTS_PER_PAGE;
+  return state.search.results.slice(start, end);
 };
 
 // Cleans object, get rid of unwanted props
