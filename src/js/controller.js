@@ -78,9 +78,18 @@ const paginationController = (toPage) => {
   paginationView.render(model.state.search);
 };
 
+const servingsController = (newServings) => {
+  // Update serving in state
+  model.updateServings(newServings);
+
+  // Update recipe view
+  recipeView.render(model.state.recipe);
+};
+
 // Trys to render recipe on load or url hash changes
 const init = () => {
   recipeView.attachRenderHandler(recipeController);
+  recipeView.attachServingsHandler(servingsController);
   searchView.attachSearchHandler(searchController);
   paginationView.attachPaginationHandler(paginationController);
 };

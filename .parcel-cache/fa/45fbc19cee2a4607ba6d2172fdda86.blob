@@ -1,0 +1,95 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateServings = exports.updatePageNumber = exports.getSearchResultsByPage = exports.loadSearchResults = exports.loadRecipt = exports.state = void 0;
+
+var _config = require("./config");
+
+var _helpers = require("./helpers");
+
+const state = {
+  recipe: {},
+  serving: 1,
+  search: {
+    query: "",
+    results: [],
+    pageNum: 1,
+    resultsPerPage: _config.RESULTS_PER_PAGE
+  }
+}; // Loads recipe information and stores to state
+
+exports.state = state;
+
+const loadRecipt = async recipeId => {
+  try {
+    // Loads recipe data from api
+    const data = await (0, _helpers.getJSON)(`${_config.API_URL}/${recipeId}`);
+    let {
+      recipe
+    } = data.data;
+    state.recipe = { ...cleanObject(recipe, "image_url", "source_url", "cooking_time"),
+      image: recipe.image_url,
+      sourceUrl: recipe.source_url,
+      cookingTime: recipe.cooking_time
+    };
+  } catch (error) {
+    throw error;
+  }
+}; // Loads search recipe results and stores to state
+
+
+exports.loadRecipt = loadRecipt;
+
+const loadSearchResults = async query => {
+  try {
+    state.search.query = query; // Loads recipe data from api
+
+    const data = await (0, _helpers.getJSON)(`${_config.API_URL}?search=${query}`);
+    const {
+      recipes
+    } = data.data; // Stores results to state
+
+    state.search.results = recipes.map(recipe => ({ ...cleanObject(recipe, "image_url"),
+      image: recipe.image_url
+    }));
+  } catch (error) {
+    throw error;
+  }
+}; // Returns one page of results by page number
+
+
+exports.loadSearchResults = loadSearchResults;
+
+const getSearchResultsByPage = (pageNum = 1) => {
+  state.search.pageNum = pageNum;
+  const start = (state.search.pageNum - 1) * state.search.resultsPerPage;
+  const end = state.search.pageNum * state.search.resultsPerPage;
+  return state.search.results.slice(start, end);
+}; // Updates current page number state
+
+
+exports.getSearchResultsByPage = getSearchResultsByPage;
+
+const updatePageNumber = toPage => {
+  state.search.pageNum = toPage;
+}; // Update serving state and recipe ingredients quantity
+
+
+exports.updatePageNumber = updatePageNumber;
+
+const updateServings = newServings => {
+  state.recipe.ingredients = state.recipe.ingredients.map(ing => ({ ...ing,
+    quantity: newServings / state.recipe.servings * ing.quantity
+  }));
+  state.recipe.servings = newServings;
+}; // Cleans object, get rid of unwanted props
+
+
+exports.updateServings = updateServings;
+
+const cleanObject = (object, ...propsToClean) => Object.entries(object).reduce((acc, [key, value]) => {
+  !propsToClean.includes(key) && (acc[key] = value);
+  return acc;
+}, {});

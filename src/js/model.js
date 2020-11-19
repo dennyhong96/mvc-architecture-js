@@ -3,6 +3,7 @@ import { getJSON } from "./helpers";
 
 export const state = {
   recipe: {},
+  serving: 1,
   search: {
     query: "",
     results: [],
@@ -59,6 +60,15 @@ export const getSearchResultsByPage = (pageNum = 1) => {
 // Updates current page number state
 export const updatePageNumber = (toPage) => {
   state.search.pageNum = toPage;
+};
+
+// Update serving state and recipe ingredients quantity
+export const updateServings = (newServings) => {
+  state.recipe.ingredients = state.recipe.ingredients.map((ing) => ({
+    ...ing,
+    quantity: (newServings / state.recipe.servings) * ing.quantity,
+  }));
+  state.recipe.servings = newServings;
 };
 
 // Cleans object, get rid of unwanted props
