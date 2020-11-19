@@ -19,13 +19,20 @@ const timeout = function (s) {
 ///////////////////////////////////////
 
 const renderRecipe = async () => {
+  // Get recipe id from url
+  const recipeId = window.location.hash?.slice(1);
+
+  console.log({ recipeId });
+
+  // Handle no hash after url
+  if (!recipeId) return;
+
   // Render a loading spinner
   renderSpinner(recipeContainer);
+
   try {
     // Loads recipe data from api
-    const res = await fetch(
-      `https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886`
-    );
+    const res = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${recipeId}`);
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
 
@@ -37,21 +44,8 @@ const renderRecipe = async () => {
       cookingTime: recipe.cooking_time,
     };
 
-    console.log(recipe);
-
-    /*
-cookingTime: 45
-id: "5ed6604591c37cdc054bc886"
-image: "http://forkify-api.herokuapp.com/images/FlatBread21of1a180.jpg"
-ingredients: (7) [{…}, {…}, {…}, {…}, {…}, {…}, {…}]
-publisher: "My Baking Addiction"
-servings: 4
-sourceUrl: "http://www.mybakingaddiction.com/spicy-chicken-and-pepper-jack-pizza-recipe/"
-title: "Spicy Chicken and Pepper Jack Pizza"
-*/
-
     // Renders recipe
-    // Builds recipe markup
+    // - Builds recipe markup
     const recipeMarkup = `
 <figure class="recipe__fig">
   <img src="${recipe.image}" alt="${recipe.title}" class="recipe__img" />
@@ -141,17 +135,15 @@ title: "Spicy Chicken and Pepper Jack Pizza"
   </a>
 </div>`;
 
-    // Clears existing markup
+    // - Clears existing markup
     recipeContainer.innerHTML = "";
 
-    // Appends market to document
+    // - Appends market to document
     recipeContainer.insertAdjacentHTML("afterbegin", recipeMarkup);
   } catch (error) {
     alert(error.message);
   }
 };
-
-renderRecipe();
 
 function renderSpinner(parentEl) {
   // Builds spinner markup
@@ -169,8 +161,12 @@ function renderSpinner(parentEl) {
   parentEl.insertAdjacentHTML("afterbegin", spinnerMarkup);
 }
 
+// Cleans object, get rid of unwanted props
 const cleanObject = (object, ...propsToClean) =>
   Object.entries(object).reduce((acc, [key, value]) => {
     !propsToClean.includes(key) && (acc[key] = value);
     return acc;
   }, {});
+
+// Trys to render recipe on load or url hash changes
+["load", "hashchange"].forEach((event) => window.addEventListener(event, renderRecipe));
