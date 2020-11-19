@@ -1,8 +1,16 @@
 import "core-js/stable"; //  polyfill ES6
 import "regenerator-runtime"; // async/awwit polyfill
 
+// Model
 import * as model from "./model";
+
+// Views
 import recipeView from "./views/RecipeView";
+import searchView from "./views/SearchView";
+import resultsView from "./views/ResultsView";
+
+// Activate Parcel hot module reloading
+module.hot && module.hot.accept();
 
 // API:
 // https://forkify-api.herokuapp.com/v2
@@ -29,18 +37,34 @@ const recipeController = async () => {
   }
 };
 
-const controlSearchResults = async () => {
+const searchController = async (evt) => {
+  evt.preventDefault();
+
   try {
-    await model.loadSearchResults("pizza");
-    console.log(model.state);
+    // Get value from search input
+    const query = searchView.getQuery();
+
+    // Handle no input
+    if (!query) return;
+
+    resultsView.renderSpinner();
+
+    // Loads search results
+    await model.loadSearchResults(query);
+
+    resultsView.render(model.state.search.results);
+
+    // Clears search input
+    searchView.clearInput();
   } catch (error) {
     console.error(error);
+    resultsView.renderError();
   }
 };
-controlSearchResults();
 
 // Trys to render recipe on load or url hash changes
 const init = () => {
   recipeView.attachRenderHandler(recipeController);
+  searchView.attachSearchHandler(searchController);
 };
 init();

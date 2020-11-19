@@ -1,0 +1,98 @@
+"use strict";
+
+require("core-js/modules/es.typed-array.float32-array");
+
+require("core-js/modules/es.typed-array.float64-array");
+
+require("core-js/modules/es.typed-array.int8-array");
+
+require("core-js/modules/es.typed-array.int16-array");
+
+require("core-js/modules/es.typed-array.int32-array");
+
+require("core-js/modules/es.typed-array.uint8-array");
+
+require("core-js/modules/es.typed-array.uint8-clamped-array");
+
+require("core-js/modules/es.typed-array.uint16-array");
+
+require("core-js/modules/es.typed-array.uint32-array");
+
+require("core-js/modules/es.typed-array.from");
+
+require("core-js/modules/es.typed-array.of");
+
+require("core-js/modules/web.immediate");
+
+require("core-js/modules/web.url");
+
+require("core-js/modules/web.url.to-json");
+
+require("core-js/modules/web.url-search-params");
+
+require("regenerator-runtime");
+
+var model = _interopRequireWildcard(require("./model"));
+
+var _RecipeView = _interopRequireDefault(require("./views/RecipeView"));
+
+var _SearchView = _interopRequireDefault(require("./views/SearchView"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+//  polyfill ES6
+// async/awwit polyfill
+// Model
+// Views
+// API:
+// https://forkify-api.herokuapp.com/v2
+const recipeController = async () => {
+  // Get recipe id from url
+  const recipeId = window.location.hash?.slice(1); // Handle no hash after url
+
+  if (!recipeId) return; // Render a loading spinner
+
+  _RecipeView.default.renderSpinner();
+
+  try {
+    // Loads recipe data from api
+    await model.loadRecipt(recipeId); // Renders recipe
+
+    _RecipeView.default.render(model.state.recipe);
+  } catch (error) {
+    console.error(`${error} 💥💥💥💥💥`);
+
+    _RecipeView.default.renderError();
+  }
+};
+
+const searchController = async evt => {
+  evt.preventDefault();
+
+  try {
+    // Get value from search input
+    const query = _SearchView.default.getQuery(); // Handle no input
+
+
+    if (!query) return; // Loads search results
+
+    await model.loadSearchResults(query); // Clears search input
+
+    _SearchView.default.clearInput();
+  } catch (error) {
+    console.error(error);
+  }
+}; // Trys to render recipe on load or url hash changes
+
+
+const init = () => {
+  _RecipeView.default.attachRenderHandler(recipeController);
+
+  _SearchView.default.attachSearchHandler(searchController);
+};
+
+init();
