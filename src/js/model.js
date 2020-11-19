@@ -1,5 +1,5 @@
-import { API_URL, RESULTS_PER_PAGE } from "./config";
-import { getJSON } from "./helpers";
+import { API_URL, API_KEY, RESULTS_PER_PAGE } from "./config";
+import { getJSON, sendJSON } from "./helpers";
 
 export const state = {
   recipe: {},
@@ -20,17 +20,23 @@ export const loadRecipt = async (recipeId) => {
     const data = await getJSON(`${API_URL}/${recipeId}`);
 
     let { recipe } = data.data;
-    state.recipe = {
-      ...cleanObject(recipe, "image_url", "source_url", "cooking_time"),
-      image: recipe.image_url,
-      sourceUrl: recipe.source_url,
-      cookingTime: recipe.cooking_time,
-      bookmarked: state.bookmarks.some((bm) => bm.id === recipe.id),
-    };
+    state.recipe = transformRecipeResponse(recipe);
+    console.log(recipe);
   } catch (error) {
     throw error;
   }
 };
+
+// Transforms response recipe data to fit applicaton state format
+const transformRecipeResponse = (data) => ({
+  ...cleanObject(data, "image_url", "source_url", "cooking_time"),
+  image: data.image_url,
+  sourceUrl: data.source_url,
+  cookingTime: data.cooking_time,
+  bookmarked: state.bookmarks.some((bm) => bm.id === data.id),
+  // Conditionaly add key to object
+  ...(data.key && { key: data.key }), // ...undefined will just do nothing {...undefined} => {}
+});
 
 // Loads search recipe results and stores to state
 export const loadSearchResults = async (query) => {
@@ -108,6 +114,39 @@ export const rehydrateBookmarks = () => {
 // Stores bookmarks into local storage
 const persistBookmarks = () => {
   localStorage.setItem("BOOKMARKS", JSON.stringify(state.bookmarks));
+};
+
+export const uploadRecipe = async (newRecipe) => {
+  try {
+    // Transform ingredient entries to ingredients array
+    const ingredients = Object.entries(newRecipe).reduce((acc, [key, value]) => {
+      if (!(key.startsWith("ingredient") && value)) return acc;
+      const inputValue = value.replaceAll(" ", "").split(",");
+      if (inputValue.length !== 3) throw new Error("Must have quantity, unit, description.");
+      const [quantity, unit, description] = inputValue;
+      return [...acc, { quantity: quantity ? Number(quantity) : null, unit, description }];
+    }, []);
+
+    // Transform new recipe input for upload request
+    const transformedRecipe = {
+      title: newRecipe.title,
+      source_url: newRecipe.sourceUrl,
+      image_url: newRecipe.image,
+      publisher: newRecipe.publisher,
+      cooking_time: Number(newRecipe.cookingTime),
+      servings: Number(newRecipe.servings),
+      ingredients,
+    };
+
+    // Uploads recipe
+    const data = await sendJSON(`${API_URL}?key=${API_KEY}`, transformedRecipe);
+    state.recipe = transformRecipeResponse(data.data.recipe);
+
+    // Adds bookmark
+    addBookmark(state.recipe);
+  } catch (error) {
+    throw error;
+  }
 };
 
 // Cleans object, get rid of unwanted props

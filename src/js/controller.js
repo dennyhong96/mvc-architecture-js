@@ -12,6 +12,8 @@ import paginationView from "./views/PaginationView";
 import bookmarkView from "./views/BookmarkView";
 import addRecipeView from "./views/AddRecipeView";
 
+import { MODAL_CLOSE_DELAY_SECS } from "./config";
+
 // Activate Parcel hot module reloading
 // module.hot && module.hot.accept();
 
@@ -111,12 +113,33 @@ const rehydrateBookmarksController = () => {
   bookmarkView.render(model.state.bookmarks);
 };
 
-const uploadController = (evt) => {
+const uploadController = async (evt) => {
   evt.preventDefault();
+  try {
+    // Transform formdata into object
+    const dataArr = [...new FormData(evt.currentTarget)]; // formdata => array entries
+    const data = Object.fromEntries(dataArr); // array entries => object
 
-  const dataArr = [...new FormData(evt.currentTarget)];
-  const data = Object.fromEntries(dataArr);
-  console.log(data);
+    // Show a loading spinner
+    addRecipeView.renderSpinner();
+
+    // Uploads recipe
+    await model.uploadRecipe(data);
+
+    // Renders the newly created recipe
+    recipeView.render(model.state.recipe);
+
+    // Renders success message
+    addRecipeView.renderMessage();
+
+    // Closes the form window
+    setTimeout(() => {
+      addRecipeView.toggleWindow();
+    }, MODAL_CLOSE_DELAY_SECS * 1000);
+  } catch (error) {
+    console.error(error);
+    addRecipeView.renderError(error.message);
+  }
 };
 
 const init = () => {
