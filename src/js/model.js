@@ -103,7 +103,6 @@ export const rehydrateBookmarks = () => {
   const bookmarks = localStorage.getItem("BOOKMARKS");
   if (!bookmarks) return;
   state.bookmarks = JSON.parse(bookmarks);
-  console.log(state);
 };
 
 // Stores bookmarks into local storage

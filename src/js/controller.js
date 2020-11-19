@@ -10,6 +10,7 @@ import searchView from "./views/SearchView";
 import resultsView from "./views/ResultsView";
 import paginationView from "./views/PaginationView";
 import bookmarkView from "./views/BookmarkView";
+import addRecipeView from "./views/AddRecipeView";
 
 // Activate Parcel hot module reloading
 // module.hot && module.hot.accept();
@@ -110,6 +111,14 @@ const rehydrateBookmarksController = () => {
   bookmarkView.render(model.state.bookmarks);
 };
 
+const uploadController = (evt) => {
+  evt.preventDefault();
+
+  const dataArr = [...new FormData(evt.currentTarget)];
+  const data = Object.fromEntries(dataArr);
+  console.log(data);
+};
+
 const init = () => {
   // Controller subsribes to View events
   recipeView.attachRenderHandler(recipeController);
@@ -118,5 +127,6 @@ const init = () => {
   searchView.attachSearchHandler(searchController);
   paginationView.attachPaginationHandler(paginationController);
   bookmarkView.attachRehydrateHandler(rehydrateBookmarksController);
+  addRecipeView.attachUploadHandler(uploadController);
 };
 init();

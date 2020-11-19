@@ -3,6 +3,7 @@ import icons from "url:../../img/icons.svg";
 export default class View {
   _data;
 
+  // Compares DOM tree elements with a virtual DOM then updates textContent and attributes
   update(data) {
     this._data = data;
 
