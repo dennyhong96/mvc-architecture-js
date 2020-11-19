@@ -82,7 +82,7 @@ export const addBookmark = (bookmark) => {
     state.recipe.bookmarked = true;
   }
 
-  localStorage.setItem("BOOKMARKS", JSON.stringify(state.bookmarks));
+  persistBookmarks();
 };
 
 export const removeBookmark = (id) => {
@@ -95,14 +95,20 @@ export const removeBookmark = (id) => {
   // Mark current recipe as not bookmarked
   state.recipe.bookmarked = false;
 
-  localStorage.setItem("BOOKMARKS", JSON.stringify(state.bookmarks));
+  persistBookmarks();
 };
 
+// Loads bookmarks from local storage
 export const rehydrateBookmarks = () => {
   const bookmarks = localStorage.getItem("BOOKMARKS");
   if (!bookmarks) return;
   state.bookmarks = JSON.parse(bookmarks);
   console.log(state);
+};
+
+// Stores bookmarks into local storage
+const persistBookmarks = () => {
+  localStorage.setItem("BOOKMARKS", JSON.stringify(state.bookmarks));
 };
 
 // Cleans object, get rid of unwanted props

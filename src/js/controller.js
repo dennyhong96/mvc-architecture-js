@@ -9,6 +9,7 @@ import recipeView from "./views/RecipeView";
 import searchView from "./views/SearchView";
 import resultsView from "./views/ResultsView";
 import paginationView from "./views/PaginationView";
+import bookmarkView from "./views/BookmarkView";
 
 // Activate Parcel hot module reloading
 // module.hot && module.hot.accept();
@@ -30,8 +31,11 @@ const recipeController = async () => {
     // Loads recipe data from api
     await model.loadRecipt(recipeId);
 
-    // Renders recipe
+    // Updates recipe view
     recipeView.render(model.state.recipe);
+
+    // Updates bookmark view
+    bookmarkView.update(model.state.bookmarks);
   } catch (error) {
     console.error(`${error} 💥💥💥💥💥`);
     recipeView.renderError();
@@ -94,17 +98,25 @@ const bookmarkController = () => {
     ? model.removeBookmark(model.state.recipe.id)
     : model.addBookmark(model.state.recipe);
 
-  // Updates UI
+  // Updates recipe view
   recipeView.update(model.state.recipe);
+
+  // Updates bookmark view
+  bookmarkView.render(model.state.bookmarks);
+};
+
+const rehydrateBookmarksController = () => {
+  model.rehydrateBookmarks();
+  bookmarkView.render(model.state.bookmarks);
 };
 
 const init = () => {
-  model.rehydrateBookmarks();
-  // Controllers subsribe to View events
+  // Controller subsribes to View events
   recipeView.attachRenderHandler(recipeController);
   recipeView.attachServingsHandler(servingsController);
   recipeView.attachBookmarkController(bookmarkController);
   searchView.attachSearchHandler(searchController);
   paginationView.attachPaginationHandler(paginationController);
+  bookmarkView.attachRehydrateHandler(rehydrateBookmarksController);
 };
 init();

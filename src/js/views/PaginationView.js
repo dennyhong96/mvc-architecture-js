@@ -19,7 +19,7 @@ class PaginationView extends View {
 
   // Generates pagination markup based on current page
   _generateMarkup() {
-    const totalPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
+    const totalPages = Math.ceil(this._data.results?.length / this._data.resultsPerPage);
 
     // On page 1, and there's no other page
     if (this._data.pageNum === 1 && totalPages === 1) return;

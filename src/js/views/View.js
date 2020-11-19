@@ -38,13 +38,15 @@ export default class View {
   }
 
   // Renders recipe into recipe container
-  render(data) {
+  render(data, render = true) {
     if (!data || (data instanceof Array && !data.length)) return this.renderError();
 
     this._data = data;
 
     // Generates markup
     const markup = this._generateMarkup();
+
+    if (!render) return markup;
 
     // Clears existing markup
     this._clear();
