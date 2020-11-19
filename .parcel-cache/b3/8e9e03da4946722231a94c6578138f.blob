@@ -498,8 +498,7 @@ const recipeController = async () => {
     _RecipeView.default.render(model.state.recipe);
   } catch (error) {
     console.error(`${error} 💥💥💥💥💥`);
-
-    _RecipeView.default.renderError();
+    alert(error.message);
   }
 }; // Trys to render recipe on load or url hash changes
 
@@ -5871,19 +5870,15 @@ var _fractional = require("fractional");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classPrivateFieldSet(receiver, privateMap, value) { var descriptor = privateMap.get(receiver); if (!descriptor) { throw new TypeError("attempted to set private field on non-instance"); } if (descriptor.set) { descriptor.set.call(receiver, value); } else { if (!descriptor.writable) { throw new TypeError("attempted to set read only private field"); } descriptor.value = value; } return value; }
+function _classPrivateFieldGet(receiver, privateMap) { var descriptor = privateMap.get(receiver); if (!descriptor) { throw new TypeError("attempted to get private field on non-instance"); } if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
 
 function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
 
-function _classPrivateFieldGet(receiver, privateMap) { var descriptor = privateMap.get(receiver); if (!descriptor) { throw new TypeError("attempted to get private field on non-instance"); } if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
+function _classPrivateFieldSet(receiver, privateMap, value) { var descriptor = privateMap.get(receiver); if (!descriptor) { throw new TypeError("attempted to set private field on non-instance"); } if (descriptor.set) { descriptor.set.call(receiver, value); } else { if (!descriptor.writable) { throw new TypeError("attempted to set read only private field"); } descriptor.value = value; } return value; }
 
 var _parentElement = new WeakMap();
 
 var _data = new WeakMap();
-
-var _errMessage = new WeakMap();
-
-var _message = new WeakMap();
 
 var _clear = new WeakSet();
 
@@ -5908,16 +5903,6 @@ class RecipeView {
       writable: true,
       value: void 0
     });
-
-    _errMessage.set(this, {
-      writable: true,
-      value: "We cound not find that recipe, please try another one."
-    });
-
-    _message.set(this, {
-      writable: true,
-      value: ""
-    });
   }
 
   // View in MVC shouldn't be aware of controller directly
@@ -5929,7 +5914,7 @@ class RecipeView {
     ["load", "hashchange"].forEach(event => window.addEventListener(event, handler));
   }
 
-  renderError(errMsg = _classPrivateFieldGet(this, _errMessage)) {
+  renderError(errMsg) {
     const errorMarkup = `
     <div class="error">
       <div>
@@ -5938,29 +5923,7 @@ class RecipeView {
         </svg>
       </div>
       <p>${errMsg}</p>
-    </div>`; // Clears existing markup
-
-    _classPrivateMethodGet(this, _clear, _clear2).call(this); // Appends markup to parent
-
-
-    _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML("afterbegin", errorMarkup);
-  }
-
-  renderMessage(msg = _classPrivateFieldGet(this, _message)) {
-    const messageMarkup = `
-    <div class="message">
-      <div>
-        <svg>
-          <use href="${_icons.default}#icon-smile"></use>
-        </svg>
-      </div>
-      <p>${msg}</p>
-    </div>`; // Clears existing markup
-
-    _classPrivateMethodGet(this, _clear, _clear2).call(this); // Appends markup to parent
-
-
-    _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML("afterbegin", messageMarkup);
+    </div>`;
   } // Renders recipe into recipe container
 
 
@@ -5968,13 +5931,13 @@ class RecipeView {
     _classPrivateFieldSet(this, _data, data); // Generates markup
 
 
-    const recipeMarkup = _classPrivateMethodGet(this, _generateMarkup, _generateMarkup2).call(this); // Clears existing markup
+    const markup = _classPrivateMethodGet(this, _generateMarkup, _generateMarkup2).call(this); // Clears existing markup
 
 
     _classPrivateMethodGet(this, _clear, _clear2).call(this); // Appends markup to document
 
 
-    _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML("afterbegin", recipeMarkup);
+    _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML("afterbegin", markup);
   } // Renders spinner loader into recipe container
 
 
@@ -5987,8 +5950,7 @@ class RecipeView {
     </svg>
   </div>`; // Clear existin markup in parent container
 
-    _classPrivateMethodGet(this, _clear, _clear2).call(this); // Appends markup to parent container
-
+    _classPrivateFieldGet(this, _parentElement).innerHTML = ""; // Appends markup to parent container
 
     _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML("afterbegin", spinnerMarkup);
   } // Clears recipe container

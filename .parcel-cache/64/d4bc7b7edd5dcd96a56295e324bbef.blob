@@ -5951,10 +5951,12 @@ class RecipeView {
     <div class="message">
       <div>
         <svg>
-          <use href="${_icons.default}#icon-smile"></use>
+          <use href="src/img/icons.svg#icon-smile"></use>
         </svg>
       </div>
-      <p>${msg}</p>
+      <p>
+        No bookmarks yet. Find a nice recipe and bookmark it :)
+      </p>
     </div>`; // Clears existing markup
 
     _classPrivateMethodGet(this, _clear, _clear2).call(this); // Appends markup to parent

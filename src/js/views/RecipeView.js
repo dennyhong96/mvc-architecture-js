@@ -6,6 +6,8 @@ class RecipeView {
   // Private fields
   #parentElement = document.querySelector(".recipe");
   #data;
+  #errMessage = "We cound not find that recipe, please try another one.";
+  #message = "";
 
   // View in MVC shouldn't be aware of controller directly
   // So don't import controller and use it
@@ -16,18 +18,54 @@ class RecipeView {
     ["load", "hashchange"].forEach((event) => window.addEventListener(event, handler));
   }
 
+  renderError(errMsg = this.#errMessage) {
+    const errorMarkup = `
+    <div class="error">
+      <div>
+        <svg>
+          <use href="${icons}#icon-alert-triangle"></use>
+        </svg>
+      </div>
+      <p>${errMsg}</p>
+    </div>`;
+
+    // Clears existing markup
+    this.#clear();
+
+    // Appends markup to parent
+    this.#parentElement.insertAdjacentHTML("afterbegin", errorMarkup);
+  }
+
+  renderMessage(msg = this.#message) {
+    const messageMarkup = `
+    <div class="message">
+      <div>
+        <svg>
+          <use href="${icons}#icon-smile"></use>
+        </svg>
+      </div>
+      <p>${msg}</p>
+    </div>`;
+
+    // Clears existing markup
+    this.#clear();
+
+    // Appends markup to parent
+    this.#parentElement.insertAdjacentHTML("afterbegin", messageMarkup);
+  }
+
   // Renders recipe into recipe container
   render(data) {
     this.#data = data;
 
     // Generates markup
-    const markup = this.#generateMarkup();
+    const recipeMarkup = this.#generateMarkup();
 
     // Clears existing markup
     this.#clear();
 
     // Appends markup to document
-    this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+    this.#parentElement.insertAdjacentHTML("afterbegin", recipeMarkup);
   }
 
   // Renders spinner loader into recipe container
@@ -41,7 +79,7 @@ class RecipeView {
   </div>`;
 
     // Clear existin markup in parent container
-    this.#parentElement.innerHTML = "";
+    this.#clear();
 
     // Appends markup to parent container
     this.#parentElement.insertAdjacentHTML("afterbegin", spinnerMarkup);

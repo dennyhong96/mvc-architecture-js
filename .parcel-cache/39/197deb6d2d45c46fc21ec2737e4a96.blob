@@ -1,0 +1,11 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.REQUEST_TIMEOUT_SECS = exports.API_URL = void 0;
+// Central place for shared constants / vars
+const API_URL = "https://forkify-api.herokuapp.com/api/v2/rescipes/";
+exports.API_URL = API_URL;
+const REQUEST_TIMEOUT_SECS = 10;
+exports.REQUEST_TIMEOUT_SECS = REQUEST_TIMEOUT_SECS;

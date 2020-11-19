@@ -5883,8 +5883,6 @@ var _data = new WeakMap();
 
 var _errMessage = new WeakMap();
 
-var _message = new WeakMap();
-
 var _clear = new WeakSet();
 
 var _generateMarkup = new WeakSet();
@@ -5913,11 +5911,6 @@ class RecipeView {
       writable: true,
       value: "We cound not find that recipe, please try another one."
     });
-
-    _message.set(this, {
-      writable: true,
-      value: ""
-    });
   }
 
   // View in MVC shouldn't be aware of controller directly
@@ -5940,27 +5933,24 @@ class RecipeView {
       <p>${errMsg}</p>
     </div>`; // Clears existing markup
 
-    _classPrivateMethodGet(this, _clear, _clear2).call(this); // Appends markup to parent
+    _classPrivateMethodGet(this, _clear, _clear2).call(this); // Appends markup to document
 
 
     _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML("afterbegin", errorMarkup);
   }
 
-  renderMessage(msg = _classPrivateFieldGet(this, _message)) {
+  renderMessage(msg) {
     const messageMarkup = `
     <div class="message">
       <div>
         <svg>
-          <use href="${_icons.default}#icon-smile"></use>
+          <use href="src/img/icons.svg#icon-smile"></use>
         </svg>
       </div>
-      <p>${msg}</p>
-    </div>`; // Clears existing markup
-
-    _classPrivateMethodGet(this, _clear, _clear2).call(this); // Appends markup to parent
-
-
-    _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML("afterbegin", messageMarkup);
+      <p>
+        No bookmarks yet. Find a nice recipe and bookmark it :)
+      </p>
+    </div>`;
   } // Renders recipe into recipe container
 
 
