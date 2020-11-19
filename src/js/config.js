@@ -7,4 +7,4 @@ export const REQUEST_TIMEOUT_SECS = 10;
 
 export const RESULTS_PER_PAGE = 10;
 
-export const MODAL_CLOSE_DELAY_SECS = 2.5;
+export const MODAL_CLOSE_DELAY_SECS = 1.75;

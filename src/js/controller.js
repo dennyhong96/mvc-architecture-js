@@ -132,6 +132,14 @@ const uploadController = async (evt) => {
     // Renders success message
     addRecipeView.renderMessage();
 
+    // Update bookmark view
+    bookmarkView.render(model.state.bookmarks);
+
+    // Change id hash in url
+    // window.location.hash = model.state.recipe.id;
+    window.history.pushState({}, "", `#${model.state.recipe.id}`); // Change url without refresh
+    // window.history.back();
+
     // Closes the form window
     setTimeout(() => {
       addRecipeView.toggleWindow();
