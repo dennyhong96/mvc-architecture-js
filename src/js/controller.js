@@ -87,10 +87,23 @@ const servingsController = (newServings) => {
   recipeView.update(model.state.recipe);
 };
 
-// Trys to render recipe on load or url hash changes
+const bookmarkController = () => {
+  // Add or remove bookmark
+  const currentRecipe = model.state.recipe.bookmarked;
+  currentRecipe
+    ? model.removeBookmark(model.state.recipe.id)
+    : model.addBookmark(model.state.recipe);
+
+  // Updates UI
+  recipeView.update(model.state.recipe);
+};
+
 const init = () => {
+  model.rehydrateBookmarks();
+  // Controllers subsribe to View events
   recipeView.attachRenderHandler(recipeController);
   recipeView.attachServingsHandler(servingsController);
+  recipeView.attachBookmarkController(bookmarkController);
   searchView.attachSearchHandler(searchController);
   paginationView.attachPaginationHandler(paginationController);
 };

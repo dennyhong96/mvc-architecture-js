@@ -10,6 +10,7 @@ export const state = {
     pageNum: 1,
     resultsPerPage: RESULTS_PER_PAGE,
   },
+  bookmarks: [],
 };
 
 // Loads recipe information and stores to state
@@ -24,6 +25,7 @@ export const loadRecipt = async (recipeId) => {
       image: recipe.image_url,
       sourceUrl: recipe.source_url,
       cookingTime: recipe.cooking_time,
+      bookmarked: state.bookmarks.some((bm) => bm.id === recipe.id),
     };
   } catch (error) {
     throw error;
@@ -69,6 +71,38 @@ export const updateServings = (newServings) => {
     quantity: (newServings / state.recipe.servings) * ing.quantity,
   }));
   state.recipe.servings = newServings;
+};
+
+export const addBookmark = (bookmark) => {
+  // Add bookmark
+  state.bookmarks.push(bookmark);
+
+  // Mark current recipe as bookmark
+  if (bookmark.id === state.recipe.id) {
+    state.recipe.bookmarked = true;
+  }
+
+  localStorage.setItem("BOOKMARKS", JSON.stringify(state.bookmarks));
+};
+
+export const removeBookmark = (id) => {
+  // Remove recipe from bookmarks state
+  state.bookmarks.splice(
+    state.bookmarks.findIndex((bm) => bm.id === id),
+    1
+  );
+
+  // Mark current recipe as not bookmarked
+  state.recipe.bookmarked = false;
+
+  localStorage.setItem("BOOKMARKS", JSON.stringify(state.bookmarks));
+};
+
+export const rehydrateBookmarks = () => {
+  const bookmarks = localStorage.getItem("BOOKMARKS");
+  if (!bookmarks) return;
+  state.bookmarks = JSON.parse(bookmarks);
+  console.log(state);
 };
 
 // Cleans object, get rid of unwanted props
