@@ -17,11 +17,10 @@ export const state = {
 export const loadRecipt = async (recipeId) => {
   try {
     // Loads recipe data from api
-    const data = await AJAX(`${API_URL}/${recipeId}`);
+    const data = await AJAX(`${API_URL}/${recipeId}?key=${API_KEY}`);
 
     let { recipe } = data.data;
     state.recipe = transformRecipeResponse(recipe);
-    console.log(recipe);
   } catch (error) {
     throw error;
   }
@@ -44,7 +43,7 @@ export const loadSearchResults = async (query) => {
     state.search.query = query;
 
     // Loads recipe data from api
-    const data = await AJAX(`${API_URL}?search=${query}`);
+    const data = await AJAX(`${API_URL}?search=${query}&key=${API_KEY}`);
     const { recipes } = data.data;
 
     // Stores results to state
@@ -121,7 +120,7 @@ export const uploadRecipe = async (newRecipe) => {
     // Transform ingredient entries to ingredients array
     const ingredients = Object.entries(newRecipe).reduce((acc, [key, value]) => {
       if (!(key.startsWith("ingredient") && value)) return acc;
-      const inputValue = value.replaceAll(" ", "").split(",");
+      const inputValue = value.split(",").map((str) => str.trim());
       if (inputValue.length !== 3) throw new Error("Must have quantity, unit, description.");
       const [quantity, unit, description] = inputValue;
       return [...acc, { quantity: quantity ? Number(quantity) : null, unit, description }];

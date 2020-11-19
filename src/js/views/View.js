@@ -38,7 +38,15 @@ export default class View {
     });
   }
 
-  // Renders recipe into recipe container
+  /**
+   * Renders the received object into DOM
+   * @param {object | object[]} data - The data to be rendered (e.g recipe)
+   * @param {boolean} [render=true] - If false, returns markup string instead of rendering to DOM
+   * @returns {undefined | string} A markup string is returned if render = false
+   * @this {object} The View instance
+   * @author Denny Hong
+   * @todo Finish implementation
+   */
   render(data, render = true) {
     if (!data || (data instanceof Array && !data.length)) return this.renderError();
 
