@@ -1,0 +1,93 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _icons = _interopRequireDefault(require("url:../../img/icons.svg"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+class View {
+  constructor() {
+    _defineProperty(this, "_data", void 0);
+  }
+
+  update(data) {} // Renders recipe into recipe container
+
+
+  render(data) {
+    this._data = data; // Generates markup
+
+    const recipeMarkup = this._generateMarkup(); // Clears existing markup
+
+
+    this._clear(); // Appends markup to document
+
+
+    this._parentElement.insertAdjacentHTML("afterbegin", recipeMarkup);
+  } // Renders spinner loader into parent container
+
+
+  renderSpinner() {
+    // Builds spinner markup
+    const spinnerMarkup = `
+    <div class="spinner">
+      <svg>
+        <use href="${_icons.default}#icon-loader"></use>
+      </svg>
+    </div>`; // Clear existin markup in parent container
+
+    this._clear(); // Appends markup to parent container
+
+
+    this._parentElement.insertAdjacentHTML("afterbegin", spinnerMarkup);
+  } // Renders an error message in parent container
+
+
+  renderError(errMsg = this._errMessage) {
+    const errorMarkup = `
+    <div class="error">
+      <div>
+        <svg>
+          <use href="${_icons.default}#icon-alert-triangle"></use>
+        </svg>
+      </div>
+      <p>${errMsg}</p>
+    </div>`; // Clears existing markup
+
+    this._clear(); // Appends markup to parent
+
+
+    this._parentElement.insertAdjacentHTML("afterbegin", errorMarkup);
+  } // Renders a message in parent container
+
+
+  renderMessage(msg = this._message) {
+    const messageMarkup = `
+    <div class="message">
+      <div>
+        <svg>
+          <use href="${_icons.default}#icon-smile"></use>
+        </svg>
+      </div>
+      <p>${msg}</p>
+    </div>`; // Clears existing markup
+
+    this._clear(); // Appends markup to parent
+
+
+    this._parentElement.insertAdjacentHTML("afterbegin", messageMarkup);
+  } // Clears the parent container
+
+
+  _clear() {
+    this._parentElement.innerHTML = "";
+  }
+
+}
+
+exports.default = View;

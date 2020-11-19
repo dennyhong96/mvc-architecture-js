@@ -35,20 +35,6 @@ class RecipeView extends View {
     });
   }
 
-  // Renders recipe into recipe container
-  render(data) {
-    this._data = data;
-
-    // Generates markup
-    const recipeMarkup = this._generateMarkup();
-
-    // Clears existing markup
-    this._clear();
-
-    // Appends markup to document
-    this._parentElement.insertAdjacentHTML("afterbegin", recipeMarkup);
-  }
-
   // Generate recipe markup
   _generateMarkup() {
     return `

@@ -13,9 +13,6 @@ import paginationView from "./views/PaginationView";
 // Activate Parcel hot module reloading
 // module.hot && module.hot.accept();
 
-// API:
-// https://forkify-api.herokuapp.com/v2
-
 const recipeController = async () => {
   // Get recipe id from url
   const recipeId = window.location.hash?.slice(1);
@@ -25,6 +22,9 @@ const recipeController = async () => {
 
   // Render a loading spinner
   recipeView.renderSpinner();
+
+  // Update results view to mark selected result
+  resultsView.update(model.getSearchResultsByPage());
 
   try {
     // Loads recipe data from api
@@ -83,7 +83,8 @@ const servingsController = (newServings) => {
   model.updateServings(newServings);
 
   // Update recipe view
-  recipeView.render(model.state.recipe);
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
 };
 
 // Trys to render recipe on load or url hash changes

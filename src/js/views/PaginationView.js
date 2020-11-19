@@ -17,18 +17,6 @@ class PaginationView extends View {
     });
   }
 
-  render(data) {
-    this._data = data;
-
-    // Clears existing markup in paginaton container
-    this._clear();
-
-    // Render pagination markup into pagination container
-    const paginationMarkup = this._generateMarkup();
-
-    this._parentElement.insertAdjacentHTML("afterbegin", paginationMarkup);
-  }
-
   // Generates pagination markup based on current page
   _generateMarkup() {
     const totalPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);

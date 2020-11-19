@@ -5,29 +5,18 @@ class ResultsView extends View {
   _errMessage = "No recipes found for your query, please try something else.";
   _message = "";
 
-  // Renders recipe list into parent container
-  render(data) {
-    if (!data.length) return this.renderError();
-
-    this._data = data;
-
-    // Clears existing html in parent container
-    this._clear();
-
-    const recipeListMarkup = this._generateMarkup();
-
-    // Inserts markup
-    this._parentElement.insertAdjacentHTML("afterbegin", recipeListMarkup);
-  }
-
   // Generates recipe list markup
   _generateMarkup() {
+    const id = window.location.hash.slice(1);
+
     return `
     ${this._data
       .map(
         (recipe) => `
     <li class="preview">
-      <a class="preview__link" href="#${recipe.id}">
+      <a class="preview__link ${recipe.id === id ? "preview__link--active" : ""}" href="#${
+          recipe.id
+        }">
         <figure class="preview__fig">
           <img src="${recipe.image}" alt="${recipe.title}" />
         </figure>
