@@ -5827,13 +5827,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getJSON = void 0;
 
-var _config = require("./config");
-
 // Helper functions
 const getJSON = async url => {
   try {
     // Timeout request after 5 seconds.
-    const res = await Promise.race([fetch(url), timeout(_config.REQUEST_TIMEOUT_SECS)]);
+    const res = await Promise.race([fetch(url), timeout(5)]);
     const data = await res.json();
     if (!res.ok) throw new Error(`${data.message} - ${res.status}`);
     return data;
@@ -5851,7 +5849,7 @@ const timeout = secs => {
     }, secs * 1000);
   });
 };
-},{"./config":"09212d541c5c40ff2bd93475a904f8de"}],"635da1da4018ba294a341e438fa23cda":[function(require,module,exports) {
+},{}],"635da1da4018ba294a341e438fa23cda":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
